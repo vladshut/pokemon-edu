@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+
+class UserController extends Controller
+{
+    public function login(Request $request)
+    {
+        Config::set('jwt.ttl', 60*60*7);
+
+        $credentials = $request->only(['email', 'password']);
+
+        if (!$token = auth()->attempt($credentials)) {
+            $user = User::create([
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'name' => 'Ash Ketchum'
+            ]);
+
+            $token = auth()->login($user);
+        }
+
+        return $this->respondWithToken(auth()->getUser(), $token);
+    }
+
+    protected function respondWithToken(User $user, $token)
+    {
+        return response()->json([
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+            'pokemons_count' => $user->pokemons()->count(),
+            'credentials' => $token,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return User::withCount('pokemons')->get();
+    }
+}
