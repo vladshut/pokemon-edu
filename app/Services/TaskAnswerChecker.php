@@ -25,14 +25,9 @@ final class TaskAnswerChecker
         $fileName = 'task_' . $task->id . '__user_' . $user->id;
         $template = File::get('task_check_template.ts');
         $templateVariables = [
-            'ANSWER' => $answer,
-            'TEST_SUITE' => $task->successCriteria,
+            '//ANSWER//' => $answer,
+            '//TEST_SUITE//' => $task->successCriteria,
         ];
-
-        foreach ($templateVariables as $key => $item) {
-            $templateVariables["//$key//"] = $item;
-            unset($templateVariables[$key]);
-        }
 
         $tsFileContent = str_replace(array_keys($templateVariables), array_values($templateVariables), $template);
 
