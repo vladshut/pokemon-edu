@@ -10,6 +10,7 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
+        "@types/jasmine": "^3.4.0",
         "axios": "^0.19",
         "cross-env": "^5.1",
         "laravel-mix": "^4.0.7",
@@ -17,5 +18,12 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0"
+    },
+    "dependencies": {
+        "jasmine": "^3.4.0",
+        "jasmine-data-provider": "^2.2.0",
+        "jasmine-node": "^3.0.0",
+        "typescript": "^3.6.3",
+        "vm2": "^3.8.4"
     }
 }

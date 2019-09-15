@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property int id
+ */
 class User extends \TCG\Voyager\Models\User
 {
     use Notifiable;

@@ -5,6 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string successCriteria
+ * @property int id
+ * @property string name
+ */
 class Task extends Model
 {
     public static function scopeCompletedByUser(Builder $query, User $user): Builder

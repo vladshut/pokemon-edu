@@ -19,6 +19,7 @@ Route::get('tasks', 'TaskController@index');
 Route::get('tasks/completed', 'TaskController@completedTasks');
 Route::get('tasks/{task}', 'TaskController@show');
 Route::post('tasks/{task}/complete', 'TaskController@complete');
+Route::post('tasks/{task}/submit', 'TaskController@submit');
 
 Route::get('pokemons', 'PokemonController@index');
 Route::get('pokemons/owned', 'PokemonController@ownedPokemons');
