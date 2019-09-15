@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -14,14 +15,14 @@ class UserController extends Controller
 
         $credentials = $request->only(['email', 'password']);
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = JWTAuth::attempt($credentials)) {
             $user = User::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'name' => 'Ash Ketchum'
             ]);
 
-            $token = auth()->login($user);
+            $token = JWTAuth::attempt($credentials);
         }
 
         return $this->respondWithToken(auth()->getUser(), $token);

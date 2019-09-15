@@ -41,8 +41,18 @@ class DatabaseSeeder extends Seeder
         Task::create([
             'name' => 'First task',
             'description' => 'Just do it!',
-            'answerTemplate' => 'const a = 6;',
-            'successCriteria' => 'const a: number = 6;',
+            'theory' => 'some theory',
+            'answerTemplate' => '
+            function add(a: number, b: number): number {}',
+            'successCriteria' => '_test_.dataProvider = [
+            { a: 2, b: 3, expected: 5 },
+            { a: 14, b: 15, expected: 29 },
+            { a: 12, b: 13, expected: 25 },
+            { a: 22, b: 13, expected: 35 },
+                    ];
+            _test_.testFunction = data => {
+                return add(data.a, data.b) === data.expected;
+            };',
         ]);
 
         User::create([
