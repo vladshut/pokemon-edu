@@ -21,7 +21,7 @@ class UserTest extends TestCase
                 'name',
                 'email',
                 'credentials',
-                'pokemons_count',
+                'awards_count',
             ]);
 
         $this->assertDatabaseHas('users', Arr::only($payload, ['user_name']));
@@ -43,7 +43,7 @@ class UserTest extends TestCase
                 'name',
                 'email',
                 'credentials',
-                'pokemons_count'
+                'awards_count'
             ]);
 
         $this->assertDatabaseHas('users', Arr::only($payload, ['user_name']));
@@ -62,7 +62,7 @@ class UserTest extends TestCase
                 'id',
                 'email',
                 'name',
-                'pokemons_count',
+                'awards_count',
             ]])
             ->assertJsonCount($usersCount);
     }

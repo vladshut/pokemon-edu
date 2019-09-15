@@ -45,7 +45,10 @@ class TaskTest extends TestCase
     {
         $user = $this->login();
         $pokemonAdded = factory(Pokemon::class)->create();
-        $user->pokemons()->attach([$pokemonAdded->id]);
+
+        /** @var Task $task */
+        $taskCompleted = factory(Task::class)->create();
+        $user->awardWithPokemonForTheCompletingTask($pokemonAdded, $taskCompleted);
         $user->save();
 
         /** @var Task $task */
@@ -53,26 +56,37 @@ class TaskTest extends TestCase
         /** @var Pokemon $pokemon */
         $pokemon = factory(Pokemon::class)->create();
 
-        $pokemonData = [
-            'id' => $pokemon->id,
-            'name' => $pokemon->name,
-            'imageUrl' => $pokemon->getImageUrlAttribute(),
+        $awardData = [
+            'pokemon' => [
+                'id' => $pokemon->id,
+                'name' => $pokemon->name,
+                'imageUrl' => $pokemon->getImageUrlAttribute(),
+            ],
+            'task' => [
+                'id' => $task->id,
+                'name' => $task->name,
+                'description' => $task->description,
+                'theory' => $task->theory,
+                'answerTemplate' => $task->answerTemplate,
+            ],
         ];
 
         $this->json('POST', 'api/tasks/'.$task->id.'/complete')
-            ->assertStatus(200)
-            ->assertJson($pokemonData);
+            ->assertStatus(201)
+            ->assertJson($awardData);
 
-        $this->assertCount(2, $user->pokemons()->get()->toArray());
-        $this->assertCount(1, $user->completedTasks()->get()->toArray());
+        $this->assertCount(2, $user->awards()->get()->toArray());
     }
 
 
     public function testSubmitSuccessPath(): void
     {
         $user = $this->login();
+        /** @var Pokemon $pokemonAdded */
         $pokemonAdded = factory(Pokemon::class)->create();
-        $user->pokemons()->attach([$pokemonAdded->id]);
+        /** @var Task $task */
+        $taskCompleted = factory(Task::class)->create();
+        $user->awardWithPokemonForTheCompletingTask($pokemonAdded, $taskCompleted);
         $user->save();
 
 
@@ -99,19 +113,26 @@ class TaskTest extends TestCase
         /** @var Pokemon $pokemon */
         $pokemon = factory(Pokemon::class)->create();
 
-        $pokemonData = [
-            'id' => $pokemon->id,
-            'name' => $pokemon->name,
-            'imageUrl' => $pokemon->getImageUrlAttribute(),
+        $awardData = [
+            'pokemon' => [
+                'id' => $pokemon->id,
+                'name' => $pokemon->name,
+                'imageUrl' => $pokemon->getImageUrlAttribute(),
+            ],
+            'task' => [
+                'id' => $task->id,
+                'name' => $task->name,
+                'description' => $task->description,
+                'theory' => $task->theory,
+                'answerTemplate' => $task->answerTemplate,
+            ],
         ];
 
-
         $this->json('POST', 'api/tasks/'.$task->id.'/submit', ['answer' => $answer])
-            ->assertStatus(200)
-            ->assertJson($pokemonData);
+            ->assertStatus(201)
+            ->assertJson($awardData);
 
-        $this->assertCount(2, $user->pokemons()->get()->toArray());
-        $this->assertCount(1, $user->completedTasks()->get()->toArray());
+        $this->assertCount(2, $user->awards()->get()->toArray());
     }
 
 
@@ -202,26 +223,5 @@ class TaskTest extends TestCase
         $this->json('POST', 'api/tasks/'.$task->id.'/submit', ['answer' => $answer])
             ->assertStatus(400)
             ->assertJson(['error' =>  'Code not executed!']);
-    }
-
-    public function testCompletedTask(): void
-    {
-        $user = $this->login();
-        $taskAdded = factory(Task::class)->create();
-        $user->completedTasks()->attach([$taskAdded->id]);
-        $user->save();
-
-        $taskData = [
-            'id' => $taskAdded->id,
-            'name' => $taskAdded->name,
-            'description' => $taskAdded->description,
-            'answerTemplate' => $taskAdded->answerTemplate,
-        ];
-
-        $task = factory(Task::class)->create();
-
-        $this->json('GET', 'api/tasks/completed')
-            ->assertStatus(200)
-            ->assertJson([$taskData]);
     }
 }

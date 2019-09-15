@@ -23,6 +23,7 @@ $factory->define(Task::class, static function (Faker $faker) {
     return [
         'name' => $faker->name,
         'description' => $faker->sentence,
+        'theory' => $faker->sentence,
         'answerTemplate' => $faker->sentence,
         'successCriteria' => $faker->sentence,
     ];

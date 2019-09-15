@@ -33,7 +33,7 @@ class UserController extends Controller
             'id' => $user->id,
             'email' => $user->email,
             'name' => $user->name,
-            'pokemons_count' => $user->pokemons()->count(),
+            'awards_count' => $user->awards()->count(),
             'credentials' => $token,
         ]);
     }
@@ -43,6 +43,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::withCount('pokemons')->get();
+        return User::withCount('awards')->get();
     }
 }

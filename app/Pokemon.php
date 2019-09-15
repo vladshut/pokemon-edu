@@ -30,26 +30,12 @@ class Pokemon extends Model
      */
     public function scopeNotOwnedByUser(Builder $query, User $user): Builder
     {
-        $ids = $user->pokemons()->get(['pokemon_id'])->toArray();
+        $ids = $user->awards()->get(['pokemon_id'])->toArray();
 
         if (!empty($ids)) {
             $query->whereNotIn('id', $ids);
         }
         return $query;
-    }
-
-    /**
-     * Scope a query to only include users of a given type.
-     *
-     * @param Builder $query
-     * @param User $user
-     * @return Builder
-     */
-    public function scopeOwnedByUser(Builder $query, User $user): Builder
-    {
-        $ids = $user->pokemons()->get(['pokemon_id'])->toArray();
-
-        return $query->whereIn('id', $ids);
     }
 
     public function getImageUrlAttribute(): string

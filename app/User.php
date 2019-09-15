@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -39,23 +40,22 @@ class User extends \TCG\Voyager\Models\User
         'email_verified_at' => 'datetime',
     ];
 
-    public function completedTasks(): BelongsToMany
+    public function awardWithPokemonForTheCompletingTask(Pokemon $pokemon, Task $task): Award
     {
-        return $this->belongsToMany(Task::class);
+        /** @var Award $award */
+        $award = Award::make();
+        $award->pokemon()->associate($pokemon);
+        $award->task()->associate($task);
+        $award->user()->associate($this);
+        $award->save();
+
+        $this->awards->add([$award->id]);
+
+        return $award;
     }
 
-    public function pokemons(): BelongsToMany
+    public function awards(): HasMany
     {
-        return $this->belongsToMany(Pokemon::class);
-    }
-
-    public function complete(Task $task): void
-    {
-        $this->completedTasks()->sync([$task->id], false);
-    }
-
-    public function award(Pokemon $pokemon): void
-    {
-        $this->pokemons()->sync([$pokemon->id], false);
+        return $this->hasMany(Award::class);
     }
 }

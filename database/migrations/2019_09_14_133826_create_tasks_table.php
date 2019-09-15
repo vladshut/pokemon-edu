@@ -16,7 +16,8 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', static function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
+            $table->text('theory');
             $table->text('answerTemplate');
             $table->text('successCriteria');
             $table->timestamps();

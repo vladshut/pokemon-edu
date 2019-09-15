@@ -27,14 +27,4 @@ class PokemonController extends Controller
     {
         return $pokemon;
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @return Collection
-     */
-    public function ownedPokemons(): Collection
-    {
-        return Pokemon::ownedByUser(auth()->user())->get();
-    }
 }

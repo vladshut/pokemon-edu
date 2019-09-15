@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string successCriteria
  * @property int id
  * @property string name
+ * @property string description
+ * @property string theory
+ * @property string answerTemplate
  */
 class Task extends Model
 {

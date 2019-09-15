@@ -39,25 +39,4 @@ class PokemonTest extends TestCase
             ->assertStatus(200)
             ->assertJson($pokemonData);
     }
-
-    public function testOwnedPokemons(): void
-    {
-        $user = $this->login();
-        /** @var Pokemon $addedPokemon */
-        $addedPokemon = factory(Pokemon::class)->create();
-        $user->pokemons()->attach([$addedPokemon->id]);
-        $user->save();
-
-        $pokemonData = [
-            'id' => $addedPokemon->id,
-            'name' => $addedPokemon->name,
-            'imageUrl' => $addedPokemon->getImageUrlAttribute(),
-        ];
-
-        factory(Pokemon::class)->create();
-
-        $this->json('GET', 'api/pokemons/owned')
-            ->assertStatus(200)
-            ->assertJson([$pokemonData]);
-    }
 }

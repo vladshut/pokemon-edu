@@ -13,10 +13,11 @@ class CreateTaskUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('task_user', function (Blueprint $table) {
+        Schema::create('awards', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('task_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('pokemon_id');
             $table->timestamps();
         });
     }

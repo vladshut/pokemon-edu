@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Award;
 use App\Exceptions\JsNotExecuted;
 use App\Exceptions\TsNotCompiled;
 use App\Pokemon;
@@ -38,36 +39,23 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @return Collection
-     */
-    public function completedTasks(): Collection
-    {
-        /** @var User $user */
-        $user = auth()->user();
-        return Task::completedByUser($user)->get();
-    }
-
-    /**
      * Submit answer to the the task.
      *
      * @param Task $task
-     * @return Pokemon
+     * @return Award
      */
-    public function complete(Task $task): Pokemon
+    public function complete(Task $task): Award
     {
         /** @var User $user */
         $user = auth()->user();
 
-        $user->complete($task);
-        /** @var Pokemon $pokemon */
-
         $pokemon = Pokemon::inRandomOrder()->notOwnedByUser($user)->limit(1)->first();
-        $user->award($pokemon);
+
+        $award = $user->awardWithPokemonForTheCompletingTask($pokemon, $task);
+        /** @var Pokemon $pokemon */
         $user->save();
 
-        return $pokemon;
+        return $award;
     }
 
 
@@ -77,7 +65,7 @@ class TaskController extends Controller
      * @param Request $request
      * @param TaskAnswerChecker $taskAnswerChecker
      * @param Task $task
-     * @return Pokemon|JsonResponse
+     * @return Award|JsonResponse
      */
     public function submit(Request $request, TaskAnswerChecker $taskAnswerChecker, Task $task)
     {
@@ -98,13 +86,11 @@ class TaskController extends Controller
             return new JsonResponse(['error' => 'Tests not passed!', 'error_data' => $result], 400);
         }
 
-        $user->complete($task);
         /** @var Pokemon $pokemon */
-
         $pokemon = Pokemon::inRandomOrder()->notOwnedByUser($user)->limit(1)->first();
-        $user->award($pokemon);
+        $award = $user->awardWithPokemonForTheCompletingTask($pokemon, $task);
         $user->save();
 
-        return $pokemon;
+        return $award;
     }
 }
