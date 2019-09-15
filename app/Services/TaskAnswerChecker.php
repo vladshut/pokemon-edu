@@ -49,8 +49,7 @@ final class TaskAnswerChecker
         $result = shell_exec('node_modules/.bin/vm2 ' . $jsFilePath);
         File::delete($jsFilePath);
 
-        $pattern = "/<RESULT>(.*?)<\/RESULT>/";
-        preg_match($pattern, $result, $matches);
+        preg_match("/<RESULT>(.*?)<\/RESULT>/", $result, $matches);
 
         $isError = !isset($matches[1]);
 
@@ -58,10 +57,6 @@ final class TaskAnswerChecker
             throw JsNotExecuted::instance();
         }
 
-        $result = $matches[1];
-
-        $result = json_decode($result, true);
-
-        return $result;
+        return json_decode($matches[1], true);
     }
 }
